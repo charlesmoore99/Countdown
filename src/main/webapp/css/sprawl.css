@@ -1,0 +1,96 @@
+body {
+	color: white;
+	background: black;
+	font-family: 'Inconsolata';
+	font-weight: 400;
+	font-style: normal;
+}
+
+a {
+	color: green;
+}
+
+
+.unpressed {
+}
+
+.pressed {
+	border-style:inset !important;
+}
+
+.button {
+	border-style:outset;
+	border-color: white;
+    border-width: 2px;	
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	background-color: black;
+   	color: white;
+	padding: 0 0.5em;
+	margin: 0 0 0 1em;
+	cursor: pointer;
+	border-radius: 5px;
+	/*     transform: skewX(-20deg); */
+}
+
+div.clock {
+	background-color: white;	
+	border: 1px solid black;
+	border-radius: 5px;
+	transform: skewX(-20deg);
+}
+
+div.wide {
+	width: 10em;
+	height: 2em;
+}
+
+div.short {
+	width: 3em;
+	height: 2em;
+}
+
+tr.legend {
+	text-align: right;
+}
+
+span.legend {
+	color: white;
+	margin-right: .5em;
+}
+
+fieldset {
+	border: 1px solid white;
+	border-radius: 5px;
+}
+
+div.alert0 {
+	background-color: white;
+}
+
+div.alert1 {
+	background-color: #FFBF00;
+}
+
+div.alert2 {
+	background-color: #F0A400;
+}
+
+div.alert3 {
+	background-color: #E18B00;
+}
+
+div.alert4 {
+	background-color: #CA5900;
+}
+
+div.alert5 {
+	background-color: #BA2B00;
+}
+
+div.alert6 {
+	background-color: #B40000;
+}
+
