@@ -1,6 +1,6 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This is a webapp for keeping track of Countdown clocks in TheSprawl
 
 ### What is this repository for? ###
 
@@ -12,6 +12,7 @@ This README would normally document whatever steps are necessary to get your app
 ### How do I get set up? ###
 
 * Summary of set up
+
     * Download and install Java 8
     * Download and install a copy of Orient DB version 1.7.X
     * Create a DB called 'theSprawl'
@@ -21,6 +22,7 @@ This README would normally document whatever steps are necessary to get your app
     * Edit the /clocks/src/main/webapp/WEB-INF/web.xml with your Orient DB connection String
     * Edit the /clocks/pom.xml.  Change the output directory of the maven war plugin to be your tomcat/webapps directory
     * Run a maven install
+
 
 * Configuration -- handled by editing the web.com.
 
