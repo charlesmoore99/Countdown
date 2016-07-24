@@ -1,4 +1,4 @@
-# README #
+# Countdown Tracker #
 
 This is a webapp for keeping track of Countdown clocks in TheSprawl
 
@@ -6,7 +6,10 @@ This is a webapp for keeping track of Countdown clocks in TheSprawl
 
 * Quick summary 
 
+    This is a jsp based webapp that connects to an Orient ODBMS.  It uses KnockoutJS and jQuery and WebSockets.
+
 * Version
+
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
