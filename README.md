@@ -27,8 +27,10 @@ This is a webapp for keeping track of Countdown clocks in TheSprawl
     * Run a maven install
 
 
-* Configuration -- handled by editing the web.com.
-
+* Configuration
+    * deploy the webapp
+    * edit the clocks/WEB-INF/web.xml -- set the db connection string, the websocketHttpPort and websocketHttpsPort.
+ 
 * Dependencies -- handled by maven
 
 * Database configuration -- you'll need to create a DB called 'theSprawl' with the Orient DB Console
