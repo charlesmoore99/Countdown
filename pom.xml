@@ -78,9 +78,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<outputDirectory>C:\tools\apache-tomcat-8.0.36\webapps</outputDirectory>
-				</configuration>
+<!-- 				<configuration> -->
+<!-- 					<outputDirectory>C:\tools\apache-tomcat-8.0.36\webapps</outputDirectory> -->
+<!-- 				</configuration> -->
 			</plugin>
 
 		</plugins>

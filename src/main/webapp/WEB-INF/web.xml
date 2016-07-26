@@ -12,12 +12,12 @@
 	</context-param>
 	<context-param>
 		<param-name>websocketHttpPort</param-name>
-		<param-value>8000</param-value>
-<!-- 		<param-value>8080</param-value> -->
+<!-- 		<param-value>8000</param-value> -->
+		<param-value>8080</param-value>
 	</context-param>
 	<context-param>
 		<param-name>websocketHttpsPort</param-name>
-		<param-value>8000</param-value>
+		<param-value>8443</param-value>
 <!-- 		<param-value>8080</param-value> -->
 	</context-param>
 </web-app>

@@ -105,13 +105,13 @@ $().ready(function(){
 
    	var uri = ""
      if (window.location.protocol == 'http:') {
-         uri = 'ws://' + window.location.host + ':<%=ws%>/clocks/commChanel/' + sprawl.viewId;
+         uri = 'ws://' + window.location.hostname + ':<%=ws%>/clocks/commChanel/' + sprawl.viewId;
      } else {
-         uri = 'wss://' + window.location.host + ':<%=wss%>/clocks/commChanel/' + sprawl.viewId;
+         uri = 'wss://' + window.location.hostname + ':<%=wss%>/clocks/commChanel/' + sprawl.viewId;
      }
 
 	
-	websocket.connect();
+	websocket.connect(uri);
 });
 </script>
 

@@ -14,6 +14,9 @@
 	Sprawl s = new Sprawl(db);
 	Campaign camp = s.getCampaignByViewId(id);
 
+	String ws = getServletContext().getInitParameter("websocketHttpPort");
+	String wss = getServletContext().getInitParameter("websocketHttpsPort");
+
 	String b = request.getRequestURI();
 
 	String url = request.getRequestURL().toString();
@@ -80,7 +83,16 @@ $().ready(function(){
 	});
 	
 	ko.applyBindings(sprawl);
-	websocket.connect();
+
+   	var uri = ""
+        if (window.location.protocol == 'http:') {
+            uri = 'ws://' + window.location.hostname + ':<%=ws%>/clocks/commChanel/' + sprawl.viewId;
+        } else {
+            uri = 'wss://' + window.location.hostname + ':<%=wss%>/clocks/commChanel/' + sprawl.viewId;
+        }
+
+   	
+   	websocket.connect(uri);
 });
 </script>
 

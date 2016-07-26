@@ -4,13 +4,7 @@
     	
     	self.socket = null;
     	
-        self.connect = function() {
-        	var uri = ""
-            if (window.location.protocol == 'http:') {
-                uri = 'ws://' + window.location.host + ':8000/clocks/commChanel/' + model.viewId;
-            } else {
-                uri = 'wss://' + window.location.host + ':8443/clocks/commChanel/' + model.viewId;
-            }
+        self.connect = function(uri) {
 
             if ('WebSocket' in window) {
                 self.socket = new WebSocket(uri);
