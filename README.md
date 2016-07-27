@@ -29,7 +29,7 @@ This is a webapp for keeping track of Countdown clocks in TheSprawl
 
 * Configuration
     * deploy the webapp
-    * edit the clocks/WEB-INF/web.xml -- set the db connection string, the websocketHttpPort and websocketHttpsPort.  (a normal tomcat uses the same ports for ws and wss as http and https, but openshift has hides its tomcat behind a proxy.  Because of this the websockets need to go directly to special websokcet ports)
+    * edit the clocks/WEB-INF/web.xml -- set the db connection string, the websocketHttpPort and websocketHttpsPort.  (a normal tomcat uses the same ports for ws and wss as http and https, but OpenShift hides its tomcat behind a proxy.  Because of this the websockets need to go directly to special websokcet ports)
  
 * Dependencies -- handled by maven
 
