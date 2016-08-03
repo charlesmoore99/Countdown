@@ -28,7 +28,7 @@
             self.socket.onmessage = function (evt) {
             	var msg = $.parseJSON(evt.data);
             	if (model.id === model.viewId) {            		
-                	model.reload();
+                	model.load(msg);
             	}
             };
         };

@@ -59,7 +59,7 @@ var SprawlVM = function(id, viewId) {
 		$.post("save.jsp", "data=" + ko.toJSON(self), function() {
 		}).always(function() {
 			alertify.notify('Sync\'d', '', .75);
-			websocket.sendMessage('{"sender":"MC","message":"NOW"}');
+			websocket.sendMessage(ko.toJSON(self.clocks));
 		    $("#loading").addClass('hide');
 		})
 	};

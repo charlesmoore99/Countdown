@@ -14,6 +14,16 @@ var SprawlCrewVM = function(id, viewId) {
 		sprawl.clocks.removeAll();
 	};
 
+	self.load = function(newClocks) {
+	 	sprawl.clocks([]);
+		$.each(newClocks, function(i, v){
+		 	var c = new Clock();
+		 	c.name(v.name);
+		 	c.level(v.level);
+		 	sprawl.clocks.push(c);
+		});	
+	};
+	
 	self.reload = function() {
 		$.getJSON(
 			"loadView.jsp?viewId=" + self.viewId,

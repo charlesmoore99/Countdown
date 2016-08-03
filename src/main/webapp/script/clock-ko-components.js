@@ -46,6 +46,7 @@ ko.components.register('mc-clock-widget', {
         }.bind(this);
     },
     template: `
+    <div>
     <table>
     	<tr>
     	<td><button class="button"  data-bind="click: remove, params=n : name">-</button></td><td><div data-bind="text: name"></div></td></tr>
@@ -69,7 +70,8 @@ ko.components.register('mc-clock-widget', {
 			<td>&nbsp;</td><td><span class="legend">00:00</span></td>
 		</tr>
 	</table>
-	`
+    </div>	
+    `
 	});
 
 ko.components.register('crew-clock-widget', {
@@ -79,9 +81,10 @@ ko.components.register('crew-clock-widget', {
         self.value = params.value;
     },
     template: `
+    <div class="crew-clock">
     <table>
     	<tr>
-    	<td><div data-bind="text: name"></div></td></tr>
+    	<td><div class="clock-name" data-bind="text: name"></div></td></tr>
     </table>
 	<table>
 		<tr>
@@ -101,7 +104,8 @@ ko.components.register('crew-clock-widget', {
 			<td>&nbsp;</td><td><span class="legend">00:00</span></td>
 		</tr>
 	</table>
-	`
+    </div>
+    `
 	});
 
 
