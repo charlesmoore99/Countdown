@@ -49,7 +49,7 @@ ko.components.register('mc-clock-widget', {
     <div>
     <table>
     	<tr>
-    	<td><button class="button"  data-bind="click: remove, params=n : name">-</button></td><td><div data-bind="text: name"></div></td></tr>
+    	<td><button class="button"  data-bind="click: remove, params=n : name">-</button></td><td><div class="mc-clock-name" data-bind="text: name"></div></td></tr>
     </table>
 	<table>
 		<tr>

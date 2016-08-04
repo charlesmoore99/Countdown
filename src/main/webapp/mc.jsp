@@ -35,7 +35,6 @@
 <title>Countdown Tracker</title>
 
 <style>
-
 #loading {
    width: 100%;
    height: 100%;
@@ -60,6 +59,61 @@
   display: none;
 }
 
+.Crm {
+	width:1280px; 
+	height:720px;
+    padding: .8em 1em 0;
+    border-radius: 3px;
+	border-style:solid; 
+	border-color:white; 
+	overflow:hidden;     
+}
+
+
+.Aligner {
+  display: flex;
+  align-items: center;
+  min-height: 720px;
+  justify-content: center;
+}
+
+.Aligner-item {
+  flex: 1;
+}
+
+.Aligner-item--top {
+  align-self: flex-start;
+}
+
+.Aligner-item--bottom {
+  align-self: flex-end;
+}
+
+.Aligner-item--fixed {
+  flex: none;
+  max-width: 50%;
+}
+
+
+
+#casticonactive {
+  float:right;
+  margin:10px 17px 14px 0px;
+  width: 64px;
+  height: 64px;
+  display:none; 
+  background-image:url('images/ic_media_route_on_custom_64.png');
+}
+
+#casticonidle {
+  float:right;
+  width: 64px;
+  height: 64px;
+  margin:10px 17px 14px 0px;
+  display:none; 
+  background-image:url('images/ic_media_route_off_custom_64.png');
+}
+
 
 </style>
 
@@ -73,6 +127,9 @@
 <script type='text/javascript' src='script/clock-mc-ko.js'></script>
 <script type='text/javascript' src='script/alertify.min.js'></script>
 <script type='text/javascript' src='script/WebSocket.js'></script>
+<script type='text/javascript' src='script/chromecast.js'></script>
+<script type="text/javascript" src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -91,6 +148,26 @@
 var sprawl = new SprawlVM("<%=id%>", "<%=camp.getViewId()%>");
 var websocket = new Chat(sprawl);
 
+
+var j = 0;
+var delay = 2000; //millisecond delay between cycles
+
+
+var hideChromecast = function() {
+    document.getElementById("casticonactive").style.display = 'none';
+    document.getElementById("casticonidle").style.display = 'none';	
+};
+
+var showIdleChromecast = function() {
+    document.getElementById("casticonactive").style.display = 'none';
+    document.getElementById("casticonidle").style.display = 'block';
+};
+
+var showActiveChromecast = function() {
+    document.getElementById("casticonactive").style.display = 'block';
+    document.getElementById("casticonidle").style.display = 'none';	
+};
+
 $().ready(function(){
 
 	var clocks = $.parseJSON('<%=clockJson%>');
@@ -102,6 +179,14 @@ $().ready(function(){
 	});
 	
 	ko.applyBindings(sprawl);
+	document.getElementById("casticonidle").addEventListener('click', function(){
+		  var clockString = ko.toJSON(sprawl.clocks)
+          startSession(clockString);		
+	});
+	
+	document.getElementById("casticonactive").addEventListener('click', function(){
+		stopApp();
+	});
 
    	var uri = ""
      if (window.location.protocol == 'http:') {
@@ -114,9 +199,15 @@ $().ready(function(){
 	websocket.connect(uri);
 });
 </script>
-
+<div style="float:left;">
+<div id="casticonactive"></div>
+<div id="casticonidle"></div>
+</div>
+<div style="float:left;">
 <h1>Countdown Controller</h1>
 <h2> MC's Eyes Only</h2>
+</div>
+<p  style="clear:both;">
 <fieldset style="float:left;">
 	<legend>Countdown Clocks</legend>	
 	<div data-bind="foreach: clocks">
@@ -127,6 +218,7 @@ $().ready(function(){
 	<button class="button" data-bind="click: add">Add Clock</button>
 	<button class="button" data-bind="click: clear">Clear All</button>
 </fieldset>
+
 <p  style="clear:both;">
 <br>
 <p>The Big Board: <a href="<%=viewURL%>"><%=viewURL%></a>

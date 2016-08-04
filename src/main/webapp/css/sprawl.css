@@ -21,13 +21,13 @@ a {
 .button {
 	border-style:outset;
 	border-color: white;
-    border-width: 2px;	
+	border-width: 2px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 1.5em;
 	background-color: black;
-   	color: white;
+	color: white;
 	padding: 0 0.5em;
 	margin: 0 0 0 1em;
 	cursor: pointer;
@@ -94,8 +94,12 @@ div.alert6 {
 	background-color: #B40000;
 }
 
+.mc-clock-name {
+	font-size: 1.5em;
+}
+
 .clock-name {
-	font-size: 2.0em;
+	font-size: 2em;
 }
 
 .crew-clock {
