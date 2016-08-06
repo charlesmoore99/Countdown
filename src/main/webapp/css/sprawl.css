@@ -29,7 +29,7 @@ a {
 	background-color: black;
 	color: white;
 	padding: 0 0.5em;
-	margin: 0 0 0 1em;
+	/* margin: 0 0 0 1em; */
 	cursor: pointer;
 	border-radius: 5px;
 	/*     transform: skewX(-20deg); */
@@ -104,6 +104,17 @@ div.alert6 {
 
 .crew-clock {
 	padding-bottom:1em;
+}
+
+.dial{
+	font-size: 12;
+	stroke: white;
+}
+
+.full-clock {
+	width:250; 
+	float:left; 
+	margin:3em 1em;
 }
 
 

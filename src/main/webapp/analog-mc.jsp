@@ -21,7 +21,7 @@
 	String b = request.getRequestURI();
 
 	String url = request.getRequestURL().toString();
-	String viewURL = url.substring(0, url.lastIndexOf('/') + 1) + "crew.jsp?id=" + camp.getViewId();
+	String viewURL = url.substring(0, url.lastIndexOf('/') + 1) + "analog-crew.jsp?id=" + camp.getViewId();
 	String editURL = request.getRequestURL().toString() + "?" + request.getQueryString();
 	
 	String clockJson = camp.clocksJson(); 
@@ -120,17 +120,18 @@
 
 </head>
 <body>
+
 <script>
 //set the chromcast application ID
 var DIGITAL_ID = 'A28B2CFD';
 var ANALOG_ID = 'C6993C03';
-var applicationID = DIGITAL_ID;
-</script>
 
+var applicationID = ANALOG_ID;
+</script>
 
 <script type='text/javascript' src='script/jquery-3.0.0.min.js'></script>
 <script type='text/javascript' src='script/knockout-3.4.0.js'></script>
-<script type='text/javascript' src='script/clock-ko-components.js'></script>
+<script type='text/javascript' src='script/analog-clock-ko-components.js'></script>
 <script type='text/javascript' src='script/clock-mc-ko.js'></script>
 <script type='text/javascript' src='script/alertify.min.js'></script>
 <script type='text/javascript' src='script/WebSocket.js'></script>

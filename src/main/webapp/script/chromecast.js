@@ -1,9 +1,11 @@
 
 
 //var applicationID = '4313056E';
-var applicationID = 'A28B2CFD';
+//var applicationID = 'A28B2CFD';
+//var applicationID = 'C6993C03';
 //var applicationID = '794B7BBF';
-var namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
+
+var namespace = 'urn:x-cast:net.pbta.clocks.countdown';
 var session = null;
 
 var receiversAvailable = false;
