@@ -218,18 +218,20 @@ $().ready(function(){
 <p  style="clear:both;">
 <fieldset style="float:left;">
 	<legend>Countdown Clocks</legend>	
+	<div>
 	<div data-bind="foreach: clocks">
 		<mc-clock-widget params="sprawl:sprawl, name: name, value: level"></mc-clock-widget>
 	</div>
+	</div>
+	<p  style="clear:both;">
 	<br>
 	<hr style="width:50em; border-color:black">
 	<button class="button" data-bind="click: add">Add Clock</button>
 	<button class="button" data-bind="click: clear">Clear All</button>
 </fieldset>
 
-<p  style="clear:both;">
 <br>
-<p>The Big Board: <a href="<%=viewURL%>"><%=viewURL%></a>
+<p style="clear:both;padding-top: 1em;">The Big Board: <a href="<%=viewURL%>"><%=viewURL%></a>
 <div id="loading" class="hide">
 	<div id="loading-content">Syncing...</div>
 </div>

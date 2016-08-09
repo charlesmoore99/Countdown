@@ -59,7 +59,7 @@ ko.components.register('mc-clock-widget', {
 			<td>&nbsp;</td><td><div class="clock short" data-bind="css: { alert4: value() === 4,  alert5: value() === 5,  alert6: value() === 6}"></div></td>
 			<td>&nbsp;</td><td><div class="clock short" data-bind="css: { alert5: value() === 5,  alert6: value() === 6}"></div></td>
 			<td>&nbsp;</td><td><div class="clock short" data-bind="css: { alert6: value() === 6}"></div></td>
-			<td><button class="button"  data-bind="click: decrease">-</button></td><td>&nbsp;</td><td><button class="button" data-bind="click: advance">+</button></td>				
+			<td style="padding-left:1em"><button class="button"  data-bind="click: decrease">-</button></td><td>&nbsp;</td><td><button class="button" data-bind="click: advance">+</button></td>				
 		</tr>
 		<tr class="legend">
 			<td>&nbsp;</td><td><span class="legend">15:00</span></td>

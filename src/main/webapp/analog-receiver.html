@@ -1,184 +1,151 @@
-<!DOCTYPE html>
 <html>
-  <head>
+<head>
 <link href="css/Inconsolata.css" rel="stylesheet">
 <link href="css/sprawl.css" rel="stylesheet">
 <style type="text/css">
-
-body{
-    margin : 3em;
-}
-.Crm {
-	width:120; 
-	height:100;
-    padding: .8em 1em 0;
-    /* border-radius: 3px;
-	border-style:solid; 
-	border-color:none; */
-	overflow:hidden;     
+body {
+	margin: 3em;
 }
 
-
-.Aligner {
-  display: flex;
-  align-items: center;
-/*  min-height: 720px;*/
-  justify-content: center;
-}
-
-.Aligner-item {
-  flex: 1;
-}
-
-.Aligner-item--top {
-  align-self: flex-start;
-}
-
-.Aligner-item--bottom {
-  align-self: flex-end;
-}
-
-.Aligner-item--fixed {
-  flex: none;
-  max-width: 50%;
+.full-clock {
+	width: 15em;
+	float: left;
+	margin: 3em 1em;
 }
 </style>
-    <title>The Big Board</title>
-  </head>
-  <body>
-    <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
-<script type='text/javascript' src='script/jquery-3.0.0.min.js'></script>
-<script type='text/javascript' src='script/knockout-3.4.0.js'></script>
-<script type='text/javascript' src='script/analog-clock-ko-components.js'></script>
-<script type='text/javascript' src='script/clock-sa-ko.js'></script>
-<script type='text/javascript' src='script/alertify.min.js'></script>
+<title>The Big Board</title>
+</head>
+<body>
+	<script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+	<script type='text/javascript' src='script/jquery-3.0.0.min.js'></script>
+	<script type='text/javascript' src='script/knockout-3.4.0.js'></script>
+	<script type='text/javascript' src='script/analog-clock-ko-components.js'></script>
+	<script type='text/javascript' src='script/clock-sa-ko.js'></script>
+	<script type='text/javascript' src='script/alertify.min.js'></script>
+	<script type="text/javascript">
+		/**
+		 * append message to debug message window
+		 * @param {string} message A message string
+		 */
+		function appendMessage(message) {
+			//var dw = document.getElementById("debugmessage");
+			//dw.innerHTML += '\n' + JSON.stringify(message) + "<br>";
+		};
 
-    <script type="text/javascript">
+		window.onload = function() {
+			cast.receiver.logger.setLevelValue(0);
+			window.castReceiverManager = cast.receiver.CastReceiverManager
+					.getInstance();
+			appendMessage('Starting Receiver Manager');
 
-/**
- * append message to debug message window
- * @param {string} message A message string
- */
-function appendMessage(message) {
-  //var dw = document.getElementById("debugmessage");
-  //dw.innerHTML += '\n' + JSON.stringify(message) + "<br>";
-};
+			// handler for the 'ready' event
+			castReceiverManager.onReady = function(event) {
+				appendMessage('Received Ready event: '
+						+ JSON.stringify(event.data));
+				window.castReceiverManager
+						.setApplicationState("Application status is ready...");
+			};
 
-      window.onload = function() {
-        cast.receiver.logger.setLevelValue(0);
-        window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-        appendMessage('Starting Receiver Manager');
-        
-        // handler for the 'ready' event
-        castReceiverManager.onReady = function(event) {
-          appendMessage('Received Ready event: ' + JSON.stringify(event.data));
-          window.castReceiverManager.setApplicationState("Application status is ready...");
-        };
-        
-        // handler for 'senderconnected' event
-        castReceiverManager.onSenderConnected = function(event) {
-          appendMessage('Received Sender Connected event: ' + event.data);
-          appendMessage(window.castReceiverManager.getSender(event.data).userAgent);
-        };
-        
-        // handler for 'senderdisconnected' event
-        castReceiverManager.onSenderDisconnected = function(event) {
-          appendMessage('Received Sender Disconnected event: ' + event.data);
-          if (window.castReceiverManager.getSenders().length == 0) {
-	        window.close();
-	      }
-        };
-        
-        // handler for 'systemvolumechanged' event
-        castReceiverManager.onSystemVolumeChanged = function(event) {
-          appendMessage('Received System Volume Changed event: ' + event.data['level'] + ' ' +
-              event.data['muted']);
-        };
+			// handler for 'senderconnected' event
+			castReceiverManager.onSenderConnected = function(event) {
+				appendMessage('Received Sender Connected event: ' + event.data);
+				appendMessage(window.castReceiverManager.getSender(event.data).userAgent);
+			};
 
-        // create a CastMessageBus to handle messages for a custom namespace
-        window.messageBus =
-          window.castReceiverManager.getCastMessageBus(
-              'urn:x-cast:net.pbta.clocks.countdown');
+			// handler for 'senderdisconnected' event
+			castReceiverManager.onSenderDisconnected = function(event) {
+				appendMessage('Received Sender Disconnected event: '
+						+ event.data);
+				if (window.castReceiverManager.getSenders().length == 0) {
+					window.close();
+				}
+			};
 
-        // handler for the CastMessageBus message event
-        window.messageBus.onMessage = function(event) {
-          appendMessage('Message [' + event.senderId + ']: ' + event.data);
-          // display the message from the sender
-          displayText(event.data);
-          // inform all senders on the CastMessageBus of the incoming message event
-          // sender message listener will be invoked
-          window.messageBus.send(event.senderId, event.data);
-        }
+			// handler for 'systemvolumechanged' event
+			castReceiverManager.onSystemVolumeChanged = function(event) {
+				appendMessage('Received System Volume Changed event: '
+						+ event.data['level'] + ' ' + event.data['muted']);
+			};
 
-        // initialize the CastReceiverManager with an application status message
-        window.castReceiverManager.start({statusText: "Application is starting"});
-        appendMessage('Receiver Manager started');
-      };
-      
-      // utility function to display the text message in the input field
-      function displayText(text) {
-        appendMessage(text);
-	var clocks = $.parseJSON(text);
-	sprawl.clocks([]);
-var x = 0;
-	$.each(clocks, function(i, v){
-x++;
-	 	var c = new Clock();
-	 	c.name(v.name);
-	 	c.level(v.level);
-	 	sprawl.clocks.push(c);
-	});	
-        window.castReceiverManager.setApplicationState("The Big Board");
-      };
+			// create a CastMessageBus to handle messages for a custom namespace
+			window.messageBus = window.castReceiverManager
+					.getCastMessageBus('urn:x-cast:net.pbta.clocks.countdown');
 
-var j = 0;
-var cycleThru2 = function(){
-	var jmax = sprawl.clocks().length;
-	var numPages = Math.ceil(jmax/sprawl.NUM_PER_PAGE) -1;
-    if (j >= numPages){
-    	j=0 }
-    else {
-    	j++;
-    }
-	
-	sprawl.page(j);
-};
+			// handler for the CastMessageBus message event
+			window.messageBus.onMessage = function(event) {
+				appendMessage('Message [' + event.senderId + ']: ' + event.data);
+				// display the message from the sender
+				displayText(event.data);
+				// inform all senders on the CastMessageBus of the incoming message event
+				// sender message listener will be invoked
+				window.messageBus.send(event.senderId, event.data);
+			}
 
-	  var sprawl  ;
-  $(document).ready(function(){
-ko.options.deferUpdates = true;
+			// initialize the CastReceiverManager with an application status message
+			window.castReceiverManager.start({
+				statusText : "Application is starting"
+			});
+			appendMessage('Receiver Manager started');
+		};
 
-        appendMessage("jQuery Ready");
-	  
-	  sprawl = new SprawlVM("");
+		// utility function to display the text message in the input field
+		function displayText(text) {
+			appendMessage(text);
+			var clocks = $.parseJSON(text);
+			sprawl.clocks([]);
+			var x = 0;
+			$.each(clocks, function(i, v) {
+				x++;
+				var c = new Clock();
+				c.name(v.name);
+				c.level(v.level);
+				sprawl.clocks.push(c);
+			});
+			window.castReceiverManager.setApplicationState("The Big Board");
+		};
 
-        appendMessage("Sprawl Created");
-	  var j = 0;
-	  var delay = 4000; //millisecond delay between cycles
-	
-	  ko.applyBindings(sprawl);
+		var j = 0;
+		var cycleThru2 = function() {
+			var jmax = sprawl.clocks().length;
+			var numPages = Math.ceil(jmax / sprawl.NUM_PER_PAGE) - 1;
+			if (j >= numPages) {
+				j = 0
+			} else {
+				j++;
+			}
 
-        appendMessage("Binding Applied");
-     setInterval(cycleThru2, delay );
-        appendMessage("Interval set");
+			sprawl.page(j);
+		};
 
-  });
+		var sprawl;
+		$(document).ready(function() {
+			ko.options.deferUpdates = true;
 
+			appendMessage("jQuery Ready");
 
-    </script>
-<h1>The Big Board</h1>
-<div class="Crm">
-  <div class="Aligner">
-	  <div class="Aligner-item Aligner-item--top"></div>
-	  <div class="Aligner-item">
-	  	<div data-bind='template: { foreach: clocksToShow, beforeRemove: hideClock, afterAdd: showClock }'>
-			<crew-clock-widget params="name: name, value: level"></crew-clock-widget>
-		</div>
-	  </div>
-	  <div class="Aligner-item Aligner-item--bottom"></div>
-  </div>
-</div>
-<div id="debugmessage">
-</div>
+			sprawl = new SprawlVM("");
+
+			appendMessage("Sprawl Created");
+			var j = 0;
+			var delay = 4000; //millisecond delay between cycles
+
+			ko.applyBindings(sprawl);
+
+			appendMessage("Binding Applied");
+			setInterval(cycleThru2, delay);
+			appendMessage("Interval set");
+
+		});
+	</script>
+	<h1>The Big Board</h1>
+	<div
+		data-bind='template: { foreach: clocksToShow, beforeRemove: hideClock, afterAdd: showClock }'>
+		<crew-clock-widget params="name: name, value: level"></crew-clock-widget>
+	</div>
+	<p style="clear: both;">
 </body>
 </html>
+
+
+
+
