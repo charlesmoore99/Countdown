@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <link href="css/Inconsolata.css" rel="stylesheet">
@@ -7,21 +8,51 @@ body {
 	margin: 3em;
 }
 
-.full-clock {
-	width: 15em;
-	float: left;
-	margin: 3em 1em;
+.Crm {
+	width: 120;
+	height: 100;
+	padding: .8em 1em 0;
+	/* border-radius: 3px;
+        border-style:solid;
+        border-color:none; */
+	overflow: hidden;
+}
+
+.Aligner {
+	display: flex;
+	align-items: center;
+	/*  min-height: 720px;*/
+	justify-content: center;
+}
+
+.Aligner-item {
+	flex: 1;
+}
+
+.Aligner-item--top {
+	align-self: flex-start;
+}
+
+.Aligner-item--bottom {
+	align-self: flex-end;
+}
+
+.Aligner-item--fixed {
+	flex: none;
+	max-width: 50%;
 }
 </style>
 <title>The Big Board</title>
 </head>
 <body>
-	<script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+	<script type="text/javascript"
+		src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
 	<script type='text/javascript' src='script/jquery-3.0.0.min.js'></script>
 	<script type='text/javascript' src='script/knockout-3.4.0.js'></script>
-	<script type='text/javascript' src='script/analog-clock-ko-components.js'></script>
+	<script type='text/javascript' src='script/clock-ko-components.js'></script>
 	<script type='text/javascript' src='script/clock-sa-ko.js'></script>
 	<script type='text/javascript' src='script/alertify.min.js'></script>
+
 	<script type="text/javascript">
 		/**
 		 * append message to debug message window
@@ -92,8 +123,8 @@ body {
 		function displayText(text) {
 			appendMessage(text);
 			var top = $.parseJSON(text);
-			sprawl.name(top.name)
 			sprawl.clocks([]);
+			sprawl.name(top.name);
 			var x = 0;
 			$.each(top.clocks, function(i, v) {
 				x++;
@@ -102,7 +133,7 @@ body {
 				c.level(v.level);
 				sprawl.clocks.push(c);
 			});
-			window.castReceiverManager.setApplicationState(top.name);
+			window.castReceiverManager.setApplicationState("The Big Board");
 		};
 
 		var j = 0;
@@ -138,15 +169,19 @@ body {
 
 		});
 	</script>
-	<h1 data-bind="text:name"></h1>
-	<div
-		data-bind='template: { foreach: clocksToShow, beforeRemove: hideClock, afterAdd: showClock }'>
-		<crew-clock-widget params="name: name, value: level"></crew-clock-widget>
+	<h1 data-bind="text: name">The Big Board</h1>
+	<div class="Crm">
+		<div class="Aligner">
+			<div class="Aligner-item Aligner-item--top"></div>
+			<div class="Aligner-item">
+				<div
+					data-bind='template: { foreach: clocksToShow, beforeRemove: hideClock, afterAdd: showClock }'>
+					<crew-clock-widget params="name: name, value: level"></crew-clock-widget>
+				</div>
+			</div>
+			<div class="Aligner-item Aligner-item--bottom"></div>
+		</div>
 	</div>
-	<p style="clear: both;">
+	<div id="debugmessage"></div>
 </body>
 </html>
-
-
-
-

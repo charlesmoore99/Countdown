@@ -29,9 +29,36 @@ a {
 	background-color: black;
 	color: white;
 	padding: 0 0.5em;
-	/* margin: 0 0 0 1em; */
+	/* margin: 0 0 0 0em; */
 	cursor: pointer;
 	border-radius: 5px;
+	color: white;
+	background: black;
+	font-family: 'Inconsolata';
+	font-weight: 400;
+	font-style: normal;
+	/*     transform: skewX(-20deg); */
+}
+
+.small-button {
+	border-style:outset;
+	border-color: white;
+	border-width: 2px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 1em;
+	background-color: black;
+	color: white;
+	padding: 0 0.5em;
+	margin: 0 1em;
+	cursor: pointer;
+	border-radius: 5px;
+	color: white;
+	background: black;
+	font-family: 'Inconsolata';
+	font-weight: 400;
+	font-style: normal;
 	/*     transform: skewX(-20deg); */
 }
 

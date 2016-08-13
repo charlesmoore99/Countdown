@@ -12,6 +12,7 @@ public class Campaign {
 	String id;
 	String viewId;
 	Date lastUpdated;
+	String name;
 	
 //	@OneToMany(orphanRemoval = true)
 	List<Clock> clocks;
@@ -69,6 +70,14 @@ public class Campaign {
 
 	public void setLastUpdated() {
 		this.lastUpdated = new Date();
+	}	
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

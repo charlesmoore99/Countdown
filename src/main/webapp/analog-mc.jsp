@@ -120,16 +120,17 @@
 
 </head>
 <body>
-
 <script>
 //set the chromcast application ID
 var DIGITAL_ID = 'A28B2CFD';
 var ANALOG_ID = 'C6993C03';
+var TEST_ID = 'D1B47EAC';
 
 var applicationID = ANALOG_ID;
 </script>
 
 <script type='text/javascript' src='script/jquery-3.0.0.min.js'></script>
+<script type='text/javascript' src='script/funcs.js'></script>
 <script type='text/javascript' src='script/knockout-3.4.0.js'></script>
 <script type='text/javascript' src='script/analog-clock-ko-components.js'></script>
 <script type='text/javascript' src='script/clock-mc-ko.js'></script>
@@ -153,7 +154,7 @@ var applicationID = ANALOG_ID;
 
 <script>
 
-var sprawl = new SprawlVM("<%=id%>", "<%=camp.getViewId()%>");
+var sprawl = new SprawlVM("<%=id%>", "<%=camp.getViewId()%>", "<%=camp.getName()%>");
 var websocket = new Chat(sprawl);
 
 
@@ -178,6 +179,7 @@ var showActiveChromecast = function() {
 
 $().ready(function(){
 
+	document.title = "<%=camp.getName()%>";
 	var clocks = $.parseJSON('<%=clockJson%>');
 	$.each(clocks, function(i, v){
 	 	var c = new Clock();
@@ -188,8 +190,10 @@ $().ready(function(){
 	
 	ko.applyBindings(sprawl);
 	document.getElementById("casticonidle").addEventListener('click', function(){
-		  var clockString = ko.toJSON(sprawl.clocks)
-          startSession(clockString);		
+		var clockStruct = new ViewData(sprawl.name, sprawl.clocks);
+		var clockString =  ko.toJSON(clockStruct);
+		startSession(clockString);
+	
 	});
 	
 	document.getElementById("casticonactive").addEventListener('click', function(){
@@ -217,8 +221,7 @@ $().ready(function(){
 </div>
 <p  style="clear:both;">
 <fieldset style="float:left;">
-	<legend>Countdown Clocks</legend>	
-	<div>
+	<legend><span data-bind="text: name"></span><button class="small-button" data-bind="click: setName">*</button></legend>	
 	<div data-bind="foreach: clocks">
 		<mc-clock-widget params="sprawl:sprawl, name: name, value: level"></mc-clock-widget>
 	</div>
@@ -230,6 +233,7 @@ $().ready(function(){
 	<button class="button" data-bind="click: clear">Clear All</button>
 </fieldset>
 
+<p  style="clear:both;">
 <br>
 <p style="clear:both;padding-top: 1em;">The Big Board: <a href="<%=viewURL%>"><%=viewURL%></a>
 <div id="loading" class="hide">

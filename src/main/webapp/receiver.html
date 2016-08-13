@@ -118,17 +118,18 @@ function appendMessage(message) {
       // utility function to display the text message in the input field
       function displayText(text) {
         appendMessage(text);
-	var clocks = $.parseJSON(text);
+	var top = $.parseJSON(text);
+	sprawl.name(top.name);
 	sprawl.clocks([]);
 var x = 0;
-	$.each(clocks, function(i, v){
+	$.each(top.clocks, function(i, v){
 x++;
 	 	var c = new Clock();
 	 	c.name(v.name);
 	 	c.level(v.level);
 	 	sprawl.clocks.push(c);
 	});	
-        window.castReceiverManager.setApplicationState("The Big Board");
+        window.castReceiverManager.setApplicationState(top.name);
       };
 
 var j = 0;
@@ -166,42 +167,7 @@ ko.options.deferUpdates = true;
 
 
     </script>
-<h1>The Big Board</h1>
-<!--
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-<hr>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-<hr>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
-1<br>
--->
-
+<h1 data-bind="text:name"></h1>
 <div class="Crm">
   <div class="Aligner">
 	  <div class="Aligner-item Aligner-item--top"></div>

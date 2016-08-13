@@ -66,6 +66,13 @@ public class Sprawl {
 		odb.save(camp);
 	}
 
+	public void updateCampaign(String id, String name, List<Clock> clocks) {
+		Campaign camp = getCampaignById(id);
+		camp.setName(name);
+		camp.setClocks(clocks);
+		odb.save(camp);
+	}
+
 	public String generateCampaignId() {
 		return UUID.randomUUID().toString();
 	}

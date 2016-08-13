@@ -20,21 +20,23 @@ JSONParser parser = new JSONParser();
 
 List<Clock> newClocks = new ArrayList<>();
 String id = "";
-
+String name = "";
 try {
 	Object d = parser.parse(data);
 	
 	JSONObject jsonO = (JSONObject) d;
 	
 	id = (String) jsonO.get("id");
+	name = (String)jsonO.get("name");
+	
 	JSONArray clocksArray = (JSONArray) jsonO.get("clocks");
 	for (Iterator<JSONObject> iterator = clocksArray.iterator(); iterator.hasNext(); ) {
 		JSONObject clockO = iterator.next();
-		String name = (String) clockO.get("name");
+		String n = (String) clockO.get("name");
 		Long level =  (Long)clockO.get("level");
 		
 		Clock c = new Clock();
-		c.setName(name);
+		c.setName(n);
 		c.setRating(level.intValue());
 		
 		newClocks.add(c);
@@ -53,7 +55,7 @@ if (camp == null) {
 {success: false, message: "Campaign does not exist"}
 <%	
 } else {
-	sprawl.updateCampaign(id, newClocks);
+	sprawl.updateCampaign(id, name, newClocks);
 }
 %>
 {success:true}

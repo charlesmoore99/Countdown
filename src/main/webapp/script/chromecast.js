@@ -1,9 +1,8 @@
-
-
 //var applicationID = '4313056E';
 //var applicationID = 'A28B2CFD';
-//var applicationID = 'C6993C03';
+//var applicationID = 'C6993C03'; // analog
 //var applicationID = '794B7BBF';
+//var applicationID = 'D1B47EAC'; // test
 
 //var namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
 var namespace = 'urn:x-cast:net.pbta.clocks.countdown';
@@ -15,74 +14,76 @@ var receiversAvailable = false;
  * Call initialization for Cast
  */
 if (!chrome.cast || !chrome.cast.isAvailable) {
-  setTimeout(initializeCastApi, 1000);
+    setTimeout(initializeCastApi, 1000);
 }
 
 /**
  * initialization
  */
 function initializeCastApi() {
-  var sessionRequest = new chrome.cast.SessionRequest(applicationID);
-  var apiConfig = new chrome.cast.ApiConfig(sessionRequest,
-    sessionListener,
-    receiverListener);
+    var sessionRequest = new chrome.cast.SessionRequest(applicationID);
+    var apiConfig = new chrome.cast.ApiConfig(sessionRequest,
+        sessionListener,
+        receiverListener);
 
-  chrome.cast.initialize(apiConfig, onInitSuccess, onError);
+    chrome.cast.initialize(apiConfig, onInitSuccess, onError);
 };
 
 /**
  * initialization success callback
  */
 function onInitSuccess() {
-  appendMessage("onInitSuccess");
+    appendMessage("onInitSuccess");
 }
 
 /**
  * initialization error callback
  */
 function onError(message) {
-  appendMessage("onError: "+JSON.stringify(message));
+    appendMessage("onError: " + JSON.stringify(message));
 }
 
 /**
  * generic success callback
  */
 function onSuccess(message) {
-  appendMessage("onSuccess: "+message);
+    appendMessage("onSuccess: " + message);
 }
 
 /**
  * callback on success for stopping app
  */
 function onStopAppSuccess() {
-  appendMessage('onStopAppSuccess');
-  session = null;
-  showIdleChromecast();
+    appendMessage('onStopAppSuccess');
+    session = null;
+    showIdleChromecast();
 }
 
 /**
  * session listener during initialization
  */
 function sessionListener(e) {
-  appendMessage('New session ID:' + e.sessionId);
-  session = e;
-  session.addUpdateListener(sessionUpdateListener);  
-  session.addMessageListener(namespace, receiverMessage);
-  
-  // send the intial data packet
-  sendMessage( ko.toJSON(sprawl.clocks))
+    appendMessage('New session ID:' + e.sessionId);
+    session = e;
+    session.addUpdateListener(sessionUpdateListener);
+    session.addMessageListener(namespace, receiverMessage);
+
+    // send the intial data packet
+    var clockStruct = new ViewData(sprawl.name, sprawl.clocks);
+    var clockString = ko.toJSON(clockStruct);
+    sendMessage(clockString);
 }
 
 /**
  * listener for session updates
  */
 function sessionUpdateListener(isAlive) {
-  var message = isAlive ? 'Session Updated' : 'Session Removed';
-  message += ': ' + session.sessionId;
-  appendMessage(message);
-  if (!isAlive) {
-    session = null;
-  }
+    var message = isAlive ? 'Session Updated' : 'Session Removed';
+    message += ': ' + session.sessionId;
+    appendMessage(message);
+    if (!isAlive) {
+        session = null;
+    }
 };
 
 /**
@@ -91,28 +92,27 @@ function sessionUpdateListener(isAlive) {
  * @param {string} message A message string
  */
 function receiverMessage(namespace, message) {
-  appendMessage("receiverMessage: "+namespace+", "+message);
+    appendMessage("receiverMessage: " + namespace + ", " + message);
 };
 
 /**
  * receiver listener during initialization
  */
 function receiverListener(e) {
-  if( e === 'available' ) {
-    appendMessage("receiver found");
-    receiversAvailable = true;
-    showIdleChromecast();
-  }
-  else {
-    appendMessage("receiver list empty");
-  }
+    if (e === 'available') {
+        appendMessage("receiver found");
+        receiversAvailable = true;
+        showIdleChromecast();
+    } else {
+        appendMessage("receiver list empty");
+    }
 }
 
 /**
  * stop app/session
  */
 function stopApp() {
-  session.stop(onStopAppSuccess, onError);
+    session.stop(onStopAppSuccess, onError);
 }
 
 function startSession(message) {
@@ -120,7 +120,7 @@ function startSession(message) {
         session = e;
         session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
         showActiveChromecast()
-      }, onError);
+    }, onError);
 };
 
 
@@ -130,16 +130,16 @@ function startSession(message) {
  * @param {string} message A message string
  */
 function sendMessage(message) {
-  if (session!=null) {
-    session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
-  }
-//  else {
-//    chrome.cast.requestSession(function(e) {
-//        session = e;
-//        session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
-//        showActiveChromecast()
-//      }, onError);
-//  }
+    if (session != null) {
+        session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
+    }
+    //  else {
+    //    chrome.cast.requestSession(function(e) {
+    //        session = e;
+    //        session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
+    //        showActiveChromecast()
+    //      }, onError);
+    //  }
 }
 
 /**
@@ -147,8 +147,7 @@ function sendMessage(message) {
  * @param {string} message A message string
  */
 function appendMessage(message) {
-  console.log(message);
-//  var dw = document.getElementById("debugmessage");
-//  dw.innerHTML += '\n' + JSON.stringify(message) + "<br>";
+    console.log(message);
+    //  var dw = document.getElementById("debugmessage");
+    //  dw.innerHTML += '\n' + JSON.stringify(message) + "<br>";
 };
-

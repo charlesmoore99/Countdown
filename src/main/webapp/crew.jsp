@@ -69,7 +69,8 @@
 
 <script>
 
-var sprawl = new SprawlCrewVM("<%=id%>", "<%=id%>");
+document.title = "<%=camp.getName()%>";
+var sprawl = new SprawlCrewVM("<%=id%>", "<%=id%>", "<%=camp.getName()%>");
 var websocket = new Chat(sprawl);
 
 $().ready(function(){
@@ -96,15 +97,11 @@ $().ready(function(){
 });
 </script>
 
-<h1>The Big Board</h1>
-<fieldset style="float:left;">
-	<legend>Countdown Clocks</legend>
-	<div data-bind="foreach: clocks">
-		<crew-clock-widget params="name: name, value: level">
-		</mc-clock-widget>
-	</div>
-	<hr style="width:50em; border-color:black">
-</fieldset>
+<h1 data-bind="text:name"></h1>
+<div data-bind="foreach: clocks">
+	<crew-clock-widget params="name: name, value: level">
+	</mc-clock-widget>
+</div>
 <p  style="clear:both;">
 <br>
 </body>

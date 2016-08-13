@@ -31,6 +31,13 @@ if (camp == null) {
 	return;
 } 
 
+JSONObject top = new JSONObject();
+String name = camp.getName();
+if (name == null | name.isEmpty()) {
+	name = "The Big Board";
+}
+top.put("name", name);
+
 
 JSONArray list = new JSONArray();
 for (Clock cur : camp.getClocks()) {
@@ -39,6 +46,6 @@ for (Clock cur : camp.getClocks()) {
 	obj.put("level", cur.getRating());
 	list.add(obj);
 }
+top.put("clocks", list);
 
-
-%>{"success": true, "message": "", "data": <%=list.toJSONString()%>}
+%>{"success": true, "message": "", "data": <%=top.toJSONString()%>}
