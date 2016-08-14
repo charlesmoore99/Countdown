@@ -6,7 +6,7 @@ This is a webapp for keeping track of Countdown clocks in games that are Powered
 
 * Quick summary 
 
-    This is a jsp based webapp that connects to an Orient ODBMS.  It uses KnockoutJS and jQuery and WebSockets.
+    This is a jsp based webapp that connects to an Orient ODBMS.  It uses KnockoutJS and jQuery and WebSockets and Chromecast.
 
 * Version
 
