@@ -1,6 +1,6 @@
 # Countdown Tracker #
 
-This is a webapp for keeping track of Countdown clocks in TheSprawl
+This is a webapp for keeping track of Countdown clocks in games that are powered by the apocalypse game engine
 
 ### What is this repository for? ###
 
@@ -21,7 +21,7 @@ This is a webapp for keeping track of Countdown clocks in TheSprawl
     * Create a DB called 'theSprawl'
     * Download and install Tomcat 8
     * Download and install Maven 3.3.9
-    * Clone the Clocks Git repo
+    * Clone the Countdown Git repo
     * Edit the /clocks/src/main/webapp/WEB-INF/web.xml with your Orient DB connection String
     * Edit the /clocks/pom.xml.  Change the output directory of the maven war plugin to be your tomcat/webapps directory
     * Run a maven install
