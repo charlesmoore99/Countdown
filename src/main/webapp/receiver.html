@@ -8,21 +8,17 @@
 body{
     margin : 3em;
 }
+
 .Crm {
 	width:120; 
 	height:100;
     padding: .8em 1em 0;
-    /* border-radius: 3px;
-	border-style:solid; 
-	border-color:none; */
 	overflow:hidden;     
 }
-
 
 .Aligner {
   display: flex;
   align-items: center;
-/*  min-height: 720px;*/
   justify-content: center;
 }
 
@@ -43,95 +39,37 @@ body{
   max-width: 50%;
 }
 </style>
-    <title>The Big Board</title>
-  </head>
-  <body>
-    <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+<title>The Big Board</title>
+</head>
+<body>
+<script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
 <script type='text/javascript' src='script/jquery-3.0.0.min.js'></script>
 <script type='text/javascript' src='script/knockout-3.4.0.js'></script>
 <script type='text/javascript' src='script/clock-ko-components.js'></script>
 <script type='text/javascript' src='script/clock-sa-ko.js'></script>
+<script type='text/javascript' src='script/chromecast-receiver.js'></script>
 <script type='text/javascript' src='script/alertify.min.js'></script>
+<script type="text/javascript">
 
-    <script type="text/javascript">
-
-/**
- * append message to debug message window
- * @param {string} message A message string
- */
-function appendMessage(message) {
-  //var dw = document.getElementById("debugmessage");
-  //dw.innerHTML += '\n' + JSON.stringify(message) + "<br>";
-};
-
-      window.onload = function() {
-        cast.receiver.logger.setLevelValue(0);
-        window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-        appendMessage('Starting Receiver Manager');
-        
-        // handler for the 'ready' event
-        castReceiverManager.onReady = function(event) {
-          appendMessage('Received Ready event: ' + JSON.stringify(event.data));
-          window.castReceiverManager.setApplicationState("Application status is ready...");
-        };
-        
-        // handler for 'senderconnected' event
-        castReceiverManager.onSenderConnected = function(event) {
-          appendMessage('Received Sender Connected event: ' + event.data);
-          appendMessage(window.castReceiverManager.getSender(event.data).userAgent);
-        };
-        
-        // handler for 'senderdisconnected' event
-        castReceiverManager.onSenderDisconnected = function(event) {
-          appendMessage('Received Sender Disconnected event: ' + event.data);
-          if (window.castReceiverManager.getSenders().length == 0) {
-	        window.close();
-	      }
-        };
-        
-        // handler for 'systemvolumechanged' event
-        castReceiverManager.onSystemVolumeChanged = function(event) {
-          appendMessage('Received System Volume Changed event: ' + event.data['level'] + ' ' +
-              event.data['muted']);
-        };
-
-        // create a CastMessageBus to handle messages for a custom namespace
-        window.messageBus =
-          window.castReceiverManager.getCastMessageBus(
-              'urn:x-cast:net.pbta.clocks.countdown');
-
-        // handler for the CastMessageBus message event
-        window.messageBus.onMessage = function(event) {
-          appendMessage('Message [' + event.senderId + ']: ' + event.data);
-          // display the message from the sender
-          displayText(event.data);
-          // inform all senders on the CastMessageBus of the incoming message event
-          // sender message listener will be invoked
-          window.messageBus.send(event.senderId, event.data);
-        }
-
-        // initialize the CastReceiverManager with an application status message
-        window.castReceiverManager.start({statusText: "Application is starting"});
-        appendMessage('Receiver Manager started');
-      };
       
-      // utility function to display the text message in the input field
-      function displayText(text) {
-        appendMessage(text);
+ // utility function to the message from the input field
+function displayText(text) {
+	appendMessage(text);
 	var top = $.parseJSON(text);
 	sprawl.name(top.name);
 	sprawl.clocks([]);
-var x = 0;
+	var x = 0;
 	$.each(top.clocks, function(i, v){
-x++;
+		x++;
 	 	var c = new Clock();
 	 	c.name(v.name);
 	 	c.level(v.level);
 	 	sprawl.clocks.push(c);
 	});	
-        window.castReceiverManager.setApplicationState(top.name);
-      };
+    window.castReceiverManager.setApplicationState(top.name);
+};
 
+// a function to handle paging through multiple pages of data
 var j = 0;
 var cycleThru2 = function(){
 	var jmax = sprawl.clocks().length;
@@ -141,32 +79,29 @@ var cycleThru2 = function(){
     else {
     	j++;
     }
-	
 	sprawl.page(j);
 };
 
-	  var sprawl  ;
-  $(document).ready(function(){
-ko.options.deferUpdates = true;
+var sprawl  ;
+$(document).ready(function(){
+	ko.options.deferUpdates = true;
 
-        appendMessage("jQuery Ready");
+    appendMessage("jQuery Ready");
 	  
-	  sprawl = new SprawlVM("");
+	sprawl = new SprawlVM("");
 
-        appendMessage("Sprawl Created");
-	  var j = 0;
-	  var delay = 4000; //millisecond delay between cycles
+    appendMessage("Sprawl Created");
+	var j = 0;
+	var delay = 4000; //millisecond delay between cycles
 	
-	  ko.applyBindings(sprawl);
+	ko.applyBindings(sprawl);
 
-        appendMessage("Binding Applied");
-     setInterval(cycleThru2, delay );
-        appendMessage("Interval set");
+    appendMessage("Binding Applied");
+    setInterval(cycleThru2, delay );
+    appendMessage("Interval set");
+});
+</script>
 
-  });
-
-
-    </script>
 <h1 data-bind="text:name"></h1>
 <div class="Crm">
   <div class="Aligner">
@@ -179,7 +114,6 @@ ko.options.deferUpdates = true;
 	  <div class="Aligner-item Aligner-item--bottom"></div>
   </div>
 </div>
-<div id="debugmessage">
-</div>
+<div id="debugmessage"></div>
 </body>
 </html>

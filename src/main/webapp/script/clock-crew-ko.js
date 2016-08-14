@@ -40,7 +40,6 @@ var SprawlCrewVM = function(id, viewId, name) {
 					var name = val.name;
 					var level = val.level;
 					var c = new Clock(name, level);
-					
 					self.clocks.push(c);
 				});
 			}

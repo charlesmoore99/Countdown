@@ -1,6 +1,4 @@
 
-
-
 var Clock = function(name, value) {
 	var self = this;
 	self.name = ko.observable(name);
@@ -46,48 +44,41 @@ var SprawlVM = function(id, viewId, name) {
 	};
 
 	self.setName = function() {
-		alertify.prompt(
-		'Set Campaign Name (limit 60 chars)',
-		'Name',
-		self.name(),
-		function(evt, value) {
-			// truncate to 60 chars							
-			self.name(truncate(value, 60, false));
-			self.save();
-		}, function() {
-		});
+		alertify.prompt( 'Set Campaign Name (limit 60 chars)', 'Name', self.name(),
+			function(evt, value) {
+				// truncate to 60 chars							
+				self.name(truncate(value, 60, false));
+				self.save();
+			}, function() {
+				//noop
+			}
+		);
 	};
 
 
 	
 	self.add = function() {
-		alertify.prompt(
-						'Add a Countdown Clock (limit 30 chars)',
-						'Name',
-						'Clock X',
-						function(evt, value) {
-							
-							var val = truncate(value, 60, false);
+		alertify.prompt( 'Add a Countdown Clock (limit 30 chars)', 'Name', 'Clock X',
+			function(evt, value) {
+				var val = truncate(value, 30, false);
 
-							// Check to see if clock already exists
-							var result = $.grep(sprawl.clocks(), function(e) {
-								return e.name() === val;
-							});
-							if (result.length == 0) {
-								// not found
-								var c = new Clock(val, 0);
-								sprawl.clocks.push(c);
-								self.save();
-							} else {
-								alertify
-										.error(
-												'A clock by that name already exists. Countdowm Clock Creation canceled',
-												'', 4)
-							}
-						}, function() {
-							alertify.notify(
-									'Countdown Clock creation canceled', '', 2)
-						});
+				// Check to see if clock already exists
+				var result = $.grep(sprawl.clocks(), function(e) {
+					return e.name() === val;
+				});
+				if (result.length == 0) {
+					// not found
+					var c = new Clock(val, 0);
+					sprawl.clocks.push(c);
+					self.save();
+				} else {
+					alertify.error('A clock by that name already exists. Countdowm Clock Creation canceled','', 4)
+				}
+			}, function() {
+				alertify.notify(
+						'Countdown Clock creation canceled', '', 2)
+			}
+		);
 	};
 
 	self.removeByName = function(c) {
@@ -145,23 +136,3 @@ var SprawlVM = function(id, viewId, name) {
 		});
 	};
 };
-
-//// Here's a custom Knockout binding that makes elements shown/hidden via
-//// jQuery's fadeIn()/fadeOut() methods
-//// Could be stored in a separate utility library
-//ko.bindingHandlers.fadeVisible = {
-//	init : function(element, valueAccessor) {
-//		// Initially set the element to be instantly visible/hidden depending on
-//		// the value
-//		var value = valueAccessor();
-//		$(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we
-//												// can handle values that may or
-//												// may not be observable
-//	},
-//	update : function(element, valueAccessor) {
-//		// Whenever the value subsequently changes, slowly fade the element in
-//		// or out
-//		var value = valueAccessor();
-//		ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
-//	}
-//};

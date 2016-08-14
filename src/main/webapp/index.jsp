@@ -68,15 +68,13 @@ icon will not appear.  Click the icon to connect to the Chromecast.
 <hr>
 
 <h3>Affiliations</h3>
-<p>This is just a just hobby page.
-<p>It is in no way affiliated with any <a href="https://en.wikipedia.org/wiki/Powered_by_the_Apocalypse">Powered by the Apocalypse</a> games,
+<p>This page is in no way affiliated with any <a href="https://en.wikipedia.org/wiki/Powered_by_the_Apocalypse">Powered by the Apocalypse</a> games,
 or <a href="http://www.drivethrurpg.com/product/171286/The-Sprawl----MIDNIGHT">The Sprawl</a>, 
 or <a href="https://plus.google.com/117694340632268764245">Hamish Cameron </a> 
 or <a href="http://www.ardens.org/">Ardens Ludere</a> 
 or <a href="http://apocalypse-world.com/">Apocalypse World</a>
 or D. Vincent Baker
 or <a href = "http://lumpley.com">Lumpley Press</a>
-
 or anyone else. 
 
 <h3>Browser and Device support</h3>
