@@ -1,6 +1,6 @@
 # Countdown Tracker #
 
-This is a webapp for keeping track of Countdown clocks in games that are Powered Vy The Apocalypse game engine.
+This is a webapp for keeping track of Countdown clocks in games that are Powered By The Apocalypse game engine.
 
 ### What is this repository for? ###
 
