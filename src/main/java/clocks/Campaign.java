@@ -21,6 +21,7 @@ public class Campaign {
 		super();
 		setId("");
 		setViewId("");
+		setName("");
 		setClocks(new ArrayList<Clock>());
 		setLastUpdated();
 	}
@@ -29,6 +30,16 @@ public class Campaign {
 		super();
 		setId(id);
 		setViewId(viewId);
+		setName("");
+		setClocks(clocks);
+		setLastUpdated();
+	}
+
+	public Campaign(String id, String viewId, String name, List<Clock> clocks) {
+		super();
+		setId(id);
+		setViewId(viewId);
+		setName(name);
 		setClocks(clocks);
 		setLastUpdated();
 	}

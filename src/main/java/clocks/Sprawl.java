@@ -53,6 +53,7 @@ public class Sprawl {
 	public String createCampaign() {
 
 		Campaign camp = odb.newInstance(Campaign.class);
+		camp.setName("The Big Board");
 		camp.setId(generateCampaignId());
 		camp.setViewId(generateCampaignId());
 		odb.save(camp);

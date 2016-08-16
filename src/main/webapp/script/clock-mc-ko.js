@@ -58,9 +58,9 @@ var SprawlVM = function(id, viewId, name) {
 
 	
 	self.add = function() {
-		alertify.prompt( 'Add a Countdown Clock (limit 30 chars)', 'Name', 'Clock X',
+		alertify.prompt( 'Add a Countdown Clock (limit 45 chars)', 'Name', 'Clock X',
 			function(evt, value) {
-				var val = truncate(value, 30, false);
+				var val = truncate(value, 45, false);
 
 				// Check to see if clock already exists
 				var result = $.grep(sprawl.clocks(), function(e) {

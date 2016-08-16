@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="clocks.Clock"%>
 <%@page import="org.json.simple.JSONArray"%>
@@ -31,7 +32,8 @@
 		list.add(obj);
 	}
 
-	String clockJson = list.toJSONString();
+	String name = StringEscapeUtils.escapeJson(camp.getName());
+	String clockJson = StringEscapeUtils.escapeJson(camp.clocksJson()); 
 %>
 
 <html>
@@ -65,12 +67,13 @@ ga('send', 'pageview');
 </script>
 
 <script>
-document.title = "<%=camp.getName()%>";
-var sprawl = new SprawlCrewVM("<%=id%>", "<%=id%>", "<%=camp.getName()%>");
+
+document.title = "<%=name%>";
+var sprawl = new SprawlCrewVM("<%=id%>", "<%=id%>", "<%=name%>");
 var websocket = new Chat(sprawl);
 
 $().ready(function(){
-	var clocks = $.parseJSON('<%=clockJson%>');
+	var clocks = $.parseJSON("<%=clockJson%>");
 
 	$.each(clocks, function(i, v) {
 		var c = new Clock();

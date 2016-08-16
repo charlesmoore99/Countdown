@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="javax.websocket.server.ServerEndpointConfig"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="clocks.Clock"%>
@@ -24,7 +25,8 @@
 	String viewURL = url.substring(0, url.lastIndexOf('/') + 1) + "analog-crew.jsp?id=" + camp.getViewId();
 	String editURL = request.getRequestURL().toString() + "?" + request.getQueryString();
 	
-	String clockJson = camp.clocksJson(); 
+	String name = StringEscapeUtils.escapeJson(camp.getName());
+	String clockJson = StringEscapeUtils.escapeJson(camp.clocksJson()); 
 %>
 <html>
 <head>
@@ -151,7 +153,7 @@ ga('send', 'pageview');
 
 <script>
 
-var sprawl = new SprawlVM("<%=id%>", "<%=camp.getViewId()%>", "<%=camp.getName()%>");
+var sprawl = new SprawlVM("<%=id%>", "<%=camp.getViewId()%>", "<%=name%>");
 var websocket = new Chat(sprawl);
 
 var j = 0;
@@ -174,8 +176,8 @@ var showActiveChromecast = function() {
 
 $().ready(function(){
 
-	document.title = "<%=camp.getName()%>";
-	var clocks = $.parseJSON('<%=clockJson%>');
+	document.title = "<%=name%>";
+	var clocks = $.parseJSON("<%=clockJson%>");
 	$.each(clocks, function(i, v){
 	 	var c = new Clock();
 	 	c.name(v.name);
@@ -218,7 +220,6 @@ $().ready(function(){
 	<legend><span data-bind="text: name"></span><button class="small-button" data-bind="click: setName">*</button></legend>	
 	<div data-bind="foreach: clocks">
 		<mc-clock-widget params="sprawl:sprawl, name: name, value: level"></mc-clock-widget>
-	</div>
 	</div>
 	<p  style="clear:both;">
 	<br>

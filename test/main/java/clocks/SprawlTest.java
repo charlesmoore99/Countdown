@@ -14,7 +14,7 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 public class SprawlTest {
 //	public static String dbString = "memory:thesprawl";
 	// public static final String dbString = "plocal:thesprawl";
-
+	String db = "remote:127.8.198.130/theSprawl";
 //	@BeforeClass
 //	public static void before() {
 //		try {
@@ -40,7 +40,7 @@ public class SprawlTest {
 //		
 //	}
 	
-	
+	@Ignore
 	@Test
 	public void createRemoteDb() {
 		OObjectDatabaseTx db = new OObjectDatabaseTx(Sprawl.remotedbstring);
@@ -49,6 +49,7 @@ public class SprawlTest {
 		
 	}
 	
+	@Ignore
 	@Test
 	public void openRemoteDb() {
 		OObjectDatabaseTx db = new OObjectDatabaseTx(Sprawl.remotedbstring);
@@ -87,6 +88,7 @@ public class SprawlTest {
 //		db2.close();
 //	}
 //	
+	@Ignore
 	@Test
 	public void create1() {
 		Sprawl s = new Sprawl();
@@ -116,6 +118,7 @@ public class SprawlTest {
 		assertTrue(foundit);
 	}
 
+	@Ignore
 	@Test
 	public void create2() {
 		Sprawl s = new Sprawl();
@@ -129,6 +132,7 @@ public class SprawlTest {
 		s.close();
 	}
 
+	@Ignore
 	@Test
 	public void listAll() {
 		Sprawl s = new Sprawl();

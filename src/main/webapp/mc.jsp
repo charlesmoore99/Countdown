@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="javax.websocket.server.ServerEndpointConfig"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="clocks.Clock"%>
@@ -24,7 +25,8 @@
 	String viewURL = url.substring(0, url.lastIndexOf('/') + 1) + "crew.jsp?id=" + camp.getViewId();
 	String editURL = request.getRequestURL().toString() + "?" + request.getQueryString();
 	
-	String clockJson = camp.clocksJson(); 
+	String name = StringEscapeUtils.escapeJson(camp.getName());
+	String clockJson = StringEscapeUtils.escapeJson(camp.clocksJson()); 
 %>
 <html>
 <head>
@@ -94,8 +96,6 @@
   max-width: 50%;
 }
 
-
-
 #casticonactive {
   float:right;
   margin:10px 17px 14px 0px;
@@ -141,26 +141,23 @@ var applicationID = DIGITAL_ID;
 
 
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-1395087-7', 'auto');
-  ga('send', 'pageview');
-
+ga('create', 'UA-1395087-7', 'auto');
+ga('send', 'pageview');
 </script>
 
 
 <script>
 
-var sprawl = new SprawlVM("<%=id%>", "<%=camp.getViewId()%>", "<%=camp.getName()%>");
+var sprawl = new SprawlVM("<%=id%>", "<%=camp.getViewId()%>", "<%=name%>");
 var websocket = new Chat(sprawl);
-
 
 var j = 0;
 var delay = 2000; //millisecond delay between cycles
-
 
 var hideChromecast = function() {
     document.getElementById("casticonactive").style.display = 'none';
@@ -179,8 +176,8 @@ var showActiveChromecast = function() {
 
 $().ready(function(){
 
-	document.title = "<%=camp.getName()%>";
-	var clocks = $.parseJSON('<%=clockJson%>');
+	document.title = "<%=name%>";
+	var clocks = $.parseJSON("<%=clockJson%>");
 	$.each(clocks, function(i, v){
 	 	var c = new Clock();
 	 	c.name(v.name);
@@ -206,7 +203,6 @@ $().ready(function(){
      } else {
          uri = 'wss://' + window.location.hostname + ':<%=wss%>/clocks/commChanel/' + sprawl.viewId;
      }
-
 	
 	websocket.connect(uri);
 });
@@ -230,7 +226,6 @@ $().ready(function(){
 	<button class="button" data-bind="click: add">Add Clock</button>
 	<button class="button" data-bind="click: clear">Clear All</button>
 </fieldset>
-
 <p  style="clear:both;">
 <br>
 <p style="clear:both;padding-top: 1em;">The Big Board: <a href="<%=viewURL%>"><%=viewURL%></a>
