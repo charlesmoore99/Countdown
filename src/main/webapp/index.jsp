@@ -115,7 +115,7 @@ but so far I like it.
 <li>Maven</li>
 <li>Github</li>
 </ul>
-<h4>Now available on Github at https://github.com/charlesmoore99/Countdown</h4>
+<h4>Now available on Github at <a href="https://github.com/charlesmoore99/Countdown">https://github.com/charlesmoore99/Countdown</a></h4>
 </div>
 </body>
 </html>
