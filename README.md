@@ -17,7 +17,7 @@ This is a webapp for keeping track of Countdown clocks in games that are Powered
 * Summary of set up
 
     * Download and install Java 8
-    * Download and install a copy of PostgreSQL DB version 9.2
+    * Download and install a copy of PostgreSQL DB version 9.2 (or really any modern postgres.)
     * Create a DB called 'theSprawl'
     * Download and install Tomcat 8
     * Download and install Maven 3.3.9
