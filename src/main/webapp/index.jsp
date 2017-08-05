@@ -78,7 +78,7 @@ or <a href = "http://lumpley.com">Lumpley Press</a>
 or anyone else. 
 
 <h3>Browser and Device support</h3>
-I tested these pages on the latest versions of Chrome, Firefox, MS Edge, and Safari.  Ti does not work in IE.  I haven't tried it in Opera.  
+I tested these pages on the latest versions of Chrome, Firefox, MS Edge, and Safari.  It does not work in IE.  I haven't tried it in Opera.  
 It looks good on a 5" Android cell phone.  It's a bit smallish on an iPhone 4S. 
 
 <div style="padding-top: 10em;">
@@ -103,7 +103,7 @@ but so far I like it.
 <ul>
 <li>Openshift</li>
 <li>Apache Tomcat 8</li>
-<li>Orient DB</li>
+<li>PostgreSQL DB</li>
 <li>JSPs</li>
 <li>WebSockets</li>
 <li>jQuery</li>
