@@ -6,7 +6,7 @@ This is a webapp for keeping track of Countdown clocks in games that are Powered
 
 * Quick summary 
 
-    This is a jsp based webapp that connects to an Orient ODBMS.  It uses KnockoutJS and jQuery and WebSockets and Chromecast.
+    This is a jsp based webapp that connects to a PostgreSQL RDBMS.  it used to connect ot Orient DB, but Orient prooved too high maintenance on Openshipt n Orient ODBMS.  It uses KnockoutJS and jQuery and WebSockets and Chromecast.
 
 * Version
 
@@ -17,12 +17,12 @@ This is a webapp for keeping track of Countdown clocks in games that are Powered
 * Summary of set up
 
     * Download and install Java 8
-    * Download and install a copy of Orient DB version 1.7.X
+    * Download and install a copy of PostgreSQL DB version 9.2
     * Create a DB called 'theSprawl'
     * Download and install Tomcat 8
     * Download and install Maven 3.3.9
     * Clone the Countdown Git repo
-    * Edit the /clocks/src/main/webapp/WEB-INF/web.xml with your Orient DB connection String
+    * Edit the /clocks/src/main/webapp/WEB-INF/web.xml with your Postgres DB connection String
     * Edit the /clocks/pom.xml.  Change the output directory of the maven war plugin to be your tomcat/webapps directory
     * Run a maven install
 
@@ -33,7 +33,7 @@ This is a webapp for keeping track of Countdown clocks in games that are Powered
  
 * Dependencies -- handled by maven
 
-* Database configuration -- you'll need to create a DB called 'theSprawl' with the Orient DB Console
+* Database configuration -- you'll need to create a DB called 'theSprawl' with the pgAdmin or via SQL
 
 * How to run tests -- don't run the tests.  All they do is manipulate the DB
 
@@ -41,9 +41,7 @@ This is a webapp for keeping track of Countdown clocks in games that are Powered
 
 ### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
+* You're on your own
 
 ### Who do I talk to? ###
 
