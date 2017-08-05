@@ -6,18 +6,23 @@
 	<display-name>Archetype Created Web Application</display-name>
 
 	<context-param>
-		<param-name>dbConnection</param-name>
-		<param-value>remote:127.8.198.130/theSprawl</param-value>
-<!-- 		<param-value>remote://LOCALHOST:2424/theSprawl</param-value> -->
+		<param-name>dbHost</param-name>
+		<param-value>${dbHost}</param-value>
+	</context-param>
+	<context-param>
+		<param-name>dbPort</param-name>
+		<param-value>${dbPort}</param-value>
 	</context-param>
 	<context-param>
 		<param-name>websocketHttpPort</param-name>
-		<param-value>8000</param-value>
-<!-- 		<param-value>8080</param-value> -->
+		<param-value>${wsPort}</param-value>
+<!-- OS		<param-value>8000</param-value> -->
+<!-- LOCAL	<param-value>8080</param-value> -->
 	</context-param>
 	<context-param>
 		<param-name>websocketHttpsPort</param-name>
-		<param-value>8443</param-value>
-<!-- 		<param-value>8080</param-value> -->
+		<param-value>${wssPort}</param-value>
+<!-- OS		<param-value>8443</param-value> -->
+<!-- LOCAL	<param-value>8080</param-value> -->
 	</context-param>
 </web-app>

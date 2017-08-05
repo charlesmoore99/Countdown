@@ -1,46 +1,49 @@
 package clocks;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import com.google.gson.Gson;
 
 public class Campaign {
 
 	String id;
 	String viewId;
 	Date lastUpdated;
+
 	String name;
-	
-//	@OneToMany(orphanRemoval = true)
-	List<Clock> clocks;
+	List<Clock> clocks = new ArrayList<>();
 
 	public Campaign() {
 		super();
 		setId("");
 		setViewId("");
 		setName("");
-		setClocks(new ArrayList<Clock>());
 		setLastUpdated();
 	}
 
-	public Campaign(String id, String viewId, List<Clock> clocks) {
+	public Campaign(String id, String viewId) {
 		super();
 		setId(id);
 		setViewId(viewId);
 		setName("");
-		setClocks(clocks);
 		setLastUpdated();
 	}
 
-	public Campaign(String id, String viewId, String name, List<Clock> clocks) {
+	public Campaign(String id, String viewId, String name) {
 		super();
 		setId(id);
 		setViewId(viewId);
 		setName(name);
-		setClocks(clocks);
 		setLastUpdated();
 	}
 
@@ -66,8 +69,19 @@ public class Campaign {
 		return clocks;
 	}
 
-	public void setClocks(List<Clock> clocks) {
-		this.clocks = clocks;
+	public String getClocksJson() {
+		Gson g = new Gson();
+		return g.toJson(getClocks());
+	}
+
+	public void setClocks(List<Clock> c) {
+		this.clocks.clear();
+		this.clocks.addAll(c);
+		setLastUpdated();
+	}
+
+	public void addClocks(List<Clock> c) {
+		this.clocks.addAll(c);
 		setLastUpdated();
 	}
 
@@ -80,7 +94,11 @@ public class Campaign {
 	}
 
 	public void setLastUpdated() {
-		this.lastUpdated = new Date();
+		setLastUpdated(new Date());
+	}	
+	
+	public void setLastUpdated(Date d) {
+		this.lastUpdated = d;
 	}	
 	
 	public String getName() {
@@ -93,20 +111,23 @@ public class Campaign {
 
 	@Override
 	public String toString() {
-		return "Campaign [id=" + getId() + ", viewId=" + getViewId() + ", clocks="	+ getClocks() + "]";
+		Instant instant = Instant.ofEpochMilli(getLastUpdated().getTime());
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+		return "Campaign [id=" + getId() + ", viewId=" + getViewId() + ", lastupdated=" + DateTimeFormatter.ISO_DATE_TIME.format(localDateTime) + ", clocks="	+ clocksJson() + "]";
 	}
-	
 
-	@SuppressWarnings("unchecked")
+	public String toJsonString() {
+		return String.format("{ \"name\": \"%s\", \"clocks\" : %s }", StringEscapeUtils.escapeJson(getName()), getClocksJson());
+	}
+
 	public String clocksJson(){
-		JSONArray list = new JSONArray();
-		for (Clock c : getClocks()) {
-			JSONObject obj = new JSONObject();
-			obj.put("name", c.getName());
-			obj.put("level", c.getRating());
-			list.add(obj);
-		}
+		Gson g = new Gson();
+		return g.toJson(getClocks());
+	}
 
-		return list.toJSONString();
+	public List<Clock> clocks(String json) {
+		Gson g = new Gson();
+		Clock[] ca = g.fromJson(json, Clock[].class);
+		return Arrays.asList(ca);
 	}
 }

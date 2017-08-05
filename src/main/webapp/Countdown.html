@@ -1,98 +1,178 @@
-<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
-<%@page import="clocks.Clock"%>
-<%@page import="java.net.URI"%>
-<%@page import="clocks.Campaign"%>
-<%@page import="clocks.Sprawl"%>
-<%
-	String id = request.getParameter("id");
-	if (id == null || id.isEmpty()) {
-		return;
-	}
-
-	String dbHost = getServletContext().getInitParameter("dbHost");
-	String dbPort = getServletContext().getInitParameter("dbPort");
-	Sprawl s = new Sprawl(dbHost, dbPort);
-	Campaign camp = s.getCampaignByViewId(id);
-
-	String ws = getServletContext().getInitParameter("websocketHttpPort");
-	String wss = getServletContext().getInitParameter("websocketHttpsPort");
-
-	String b = request.getRequestURI();
-
-	String url = request.getRequestURL().toString();
-// 	String viewURL = url.substring(0, url.lastIndexOf('/') + 1) + "/crew.jsp?id=" + camp.getViewId();
-// 	String editURL = request.getRequestURL().toString() + "?" + request.getQueryString();
-
-	String name = StringEscapeUtils.escapeJson(camp.getName());
-	String clockJson = StringEscapeUtils.escapeJson(camp.clocksJson());   
-%>
-
 <html>
 <head>
-<!-- <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet"> -->
 <link href="css/Inconsolata.css" rel="stylesheet">
 <link href="css/sprawl.css" rel="stylesheet">
 <link href="css/alertify.css" rel="stylesheet">
 <link id="page_favicon" href="data:image/x-icon;base64,R0lGODlhEAAQAPAAAAAAAAAAACH5BAkKAAEAIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCAUAgEAgAAoFAABAABAIBQCAQAAQAgUAAEAgEAgFAIBAIBACBQAAACAQCAUAgEBAAABAQEAAQEBAQEBAQEBAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgQAgEAgAAoFAABAABAKBACAQAAQAgUAAEAgEAgFAIBAIBACBQAAACAQCAUAgEBAAABAQEAAQEBAQEBAQEBAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgEAoFAAAAIBACBQAAACAQCAQAgEBAAABAQEAAQEBAQEBAQEBAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgEAoFAIBAIBACBQAAACAQCAQAAABAAABAQEAAQEBAQEBAQEBAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgEAoFAIBAIBACBQAAACAQCAQAgEBAAABAQEAAQEBAQEBAQAAAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgEAoFAIBAIBACBQAAACAQCAUAgEBAAABAQEAAQEBAQEAAQEBAQEAAQEBAAEAAQEBAQABAQABAAEBAQEAAQEBAQEAAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgEAoFAIBAIBACBQAAACAQCAUAgEBAAABAQEAAQEBAQEAAQEBAQEAAQEBAAEAAQEBAAEBAQABAAEBAQEAAQEBAQABAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgEAoFAIBAIBACBQAAACAQCAUAgEBAAABAQEAAQEBAQEAAQEBAQEAAQEBAAEAAQEAAQEBAQABAAEBAQEAAQEBAAEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgEAoFAIBAIBACBQAAACAQCAEAgEBAAABAQEAAQEAAAEBAQEBAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgEAoFAIBAIBACBQAAACAAAAEAgEBAAABAQEAAQEBAQEBAQEBAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgUAgEAgAAoFAABAABAKBQCAQAAQAgUAAEAgAAIFAIBAIBACBQAAACAQCAEAgEBAAABAQEAAQEBAQEBAQEBAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAAh+QQJCgABACwAAAAAEAAQAAAC50wSEREREUIIIYQQQgAAABAEQRAEQRAAQBAAQQAAQRAEQQAEARAEARAIAAKBQCAACAQCgEAgEAgAAoFAABAABAKAQCAQAAQAgUAAEAgEAgFAIBAIBACBQAAACAQCAUAgEBAAABAQEAAQEBAQEBAQEBAQEAAQEBAAEAAQEBAQEBAQABAAEBAQEAAQEBAQEBAQEBAAEBAQEBAAEBAAEBAQABAQABAQEBAQEAAAEBAAEBAAABAQEBAQEBAQEAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQIECAAAEKAAA7" rel="icon" type="image/x-icon">
-<title>Countdown Tracker</title>
+<title>The Big Board</title>
+
+<style>
+#loading {
+   width: 100%;
+   height: 100%;
+   top: 0px;
+   left: 0px;
+   position: fixed;
+   opacity: 0.7;
+   background-color: #000000;
+   z-index: 99;
+   text-align: center;
+}
+
+#loading-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  z-index: 100;
+}
+
+.hide{
+  display: none;
+}
+
+.Crm {
+	width:1280px; 
+	height:720px;
+    padding: .8em 1em 0;
+    border-radius: 3px;
+	border-style:solid; 
+	border-color:white; 
+	overflow:hidden;     
+}
+
+
+.Aligner {
+  display: flex;
+  align-items: center;
+  min-height: 720px;
+  justify-content: center;
+}
+
+.Aligner-item {
+  flex: 1;
+}
+
+.Aligner-item--top {
+  align-self: flex-start;
+}
+
+.Aligner-item--bottom {
+  align-self: flex-end;
+}
+
+.Aligner-item--fixed {
+  flex: none;
+  max-width: 50%;
+}
+
+
+#casticonactive {
+  float:right;
+  margin:10px 17px 14px 0px;
+  width: 64px;
+  height: 64px;
+  display:none; 
+  background-image:url('images/ic_media_route_on_custom_64.png');
+}
+
+#casticonidle {
+  float:right;
+  width: 64px;
+  height: 64px;
+  margin:10px 17px 14px 0px;
+  display:none; 
+  background-image:url('images/ic_media_route_off_custom_64.png');
+}
+
+</style>
+
+
 </head>
 <body>
 
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
 <script type='text/javascript' src='script/jquery-3.0.0.min.js'></script>
 <script type='text/javascript' src='script/knockout-3.4.0.js'></script>
-<script type='text/javascript' src='script/clock-ko-components.js'></script>
-<script type='text/javascript' src='script/clock-crew-ko.js'></script>
+<script type='text/javascript' src='script/analog-clock-ko-components.js'></script>
+<script type='text/javascript' src='script/clock-sa-ko.js'></script>
 <script type='text/javascript' src='script/alertify.min.js'></script>
-<script type='text/javascript' src='script/WebSocket.js'></script>
+<script type='text/javascript' src='script/Storage.js'></script>
+<script type='text/javascript' src='script/chromecast.js'></script>
+<script type="text/javascript" src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+
 
 <script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+//   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+//   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+//   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+//   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-1395087-7', 'auto');
-ga('send', 'pageview');
+//   ga('create', 'UA-1395087-7', 'auto');
+//   ga('send', 'pageview');
 
 </script>
 
+
 <script>
 
-document.title = "<%=name%>";
-var sprawl = new SprawlCrewVM("<%=id%>", "<%=id%>", "<%=name%>");
-var websocket = new Chat(sprawl);
+var storage = new Storage('clocks');
+var sprawl = new SprawlVM("", storage);
+
+var j = 0;
+var delay = 2000; //millisecond delay between cycles
+
+
+var hideChromecast = function() {
+    document.getElementById("casticonactive").style.display = 'none';
+    document.getElementById("casticonidle").style.display = 'none';	
+};
+
+var showIdleChromecast = function() {
+    document.getElementById("casticonactive").style.display = 'none';
+    document.getElementById("casticonidle").style.display = 'block';
+};
+
+var showActiveChromecast = function() {
+    document.getElementById("casticonactive").style.display = 'block';
+    document.getElementById("casticonidle").style.display = 'none';	
+};
 
 $().ready(function(){
-	var clocks = $.parseJSON("<%=clockJson%>");
-
-	$.each(clocks, function(i, v) {
-		var c = new Clock();
-		c.name(v.name);
-		c.level(v.level);
-		sprawl.clocks().push(c);
-	});
+	sprawl.load();
 	
 	ko.applyBindings(sprawl);
-
-   	var uri = ""
-        if (window.location.protocol == 'http:') {
-            uri = 'ws://' + window.location.hostname + ':<%=ws%>/clocks/commChanel/' + sprawl.viewId;
-        } else {
-            uri = 'wss://' + window.location.hostname + ':<%=wss%>/clocks/commChanel/' + sprawl.viewId;
-        }
-
-   	
-   	websocket.connect(uri);
+	document.getElementById("casticonidle").addEventListener('click', function(){
+		  var clockString = ko.toJSON(sprawl.clocks)
+          startSession(clockString);		
+	});
+	
+	document.getElementById("casticonactive").addEventListener('click', function(){
+		stopApp();
+	});
 });
 </script>
-
-<h1 data-bind="text:name"></h1>
-<div data-bind="foreach: clocks">
-	<crew-clock-widget params="name: name, value: level">
-	</mc-clock-widget>
+<div style="float:left;">
+<div id="casticonactive"></div>
+<div id="casticonidle"></div>
 </div>
+<div style="float:left;">
+<h1>The Big Board</h1>
+<h2> MC's Eyes Only</h2>
+</div>
+
 <p  style="clear:both;">
+
+<div data-bind="foreach: clocks">
+	<mc-clock-widget params="sprawl:sprawl, name: name, value: level"></mc-clock-widget>
+</div>
 <br>
+<p  style="clear:both;">
+<button class="button" data-bind="click: add">Add Clock</button>
+<button class="button" data-bind="click: clear">Clear All</button>
+
+<p  style="clear:both;">
+
+<div id="debugmessage">
+</div>
 </body>
 </html>

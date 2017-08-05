@@ -1,77 +1,96 @@
 package clocks;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
-import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import com.orientechnologies.orient.object.db.OObjectDatabasePool;
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
+import javax.sql.DataSource;
 
+import com.google.gson.Gson;
+import com.jcabi.aspects.Cacheable;
+import com.jcabi.jdbc.JdbcSession;
+import com.jcabi.jdbc.Outcome;
+import com.jcabi.jdbc.SingleOutcome;
+import com.jcabi.jdbc.Utc;
+import com.jolbox.bonecp.BoneCPDataSource;
 
 public class Sprawl {
 
-//	static final String localdbstring = "plocal:c:\\work\\db\\thesprawl";
-	static final String remotedbstring = "remote://127.8.198.130:2424/theSprawl";
-//	static final String remotedbstring = "remote:localhost/theSprawl";
-//	static final String dbUser = "mc";
-//	static final String dbPassword = "Event-Strike-Special-Minute-9";
-//	static final String dbUser = "root";
-//	static final String dbPassword = "2B5192383BB0FDB80D82C1730A40EF3DAAAE3789B6C0C1CDBE9A5C9AE1A1C84C";
-	static final String dbUser = "admin";
-	static final String dbPassword = "admin";
+	// static final String localdbstring = "plocal:c:\\work\\db\\thesprawl";
+	// static final String remotedbstring =
+	// "remote://127.8.198.130:2424/theSprawl";
+	static final String remotedbstring = "remote://127.0.0.1:5432/clocks";
+	// static final String remotedbstring = "remote:localhost/theSprawl";
+	// static final String dbUser = "mc";
+	// static final String dbPassword = "Event-Strike-Special-Minute-9";
+	// static final String dbUser = "root";
+	// static final String dbPassword =
+	// "2B5192383BB0FDB80D82C1730A40EF3DAAAE3789B6C0C1CDBE9A5C9AE1A1C84C";
+	static final String dbUser = "clocks";
+	static final String dbPassword = "clocks";
+
+	static BoneCPDataSource source = null;
 	
-	OObjectDatabaseTx odb;
+//	@Cacheable(forever = true)
+//	private static DataSource source() {
+//	}
 
 	public Sprawl() {
 		super();
-		open();
+		if (source == null) {
+			source = new BoneCPDataSource();
+			source.setDriverClass("org.postgresql.Driver");
+			source.setJdbcUrl("jdbc:postgresql://localhost:5432/clocks");
+			source.setUser("clocks");
+			source.setPassword("clocks");
+		}
 	}
-	
-	public Sprawl(String db) {
+
+	public Sprawl(String host, String port) {
 		super();
-		open(db);
-	}
-	
-	public void open()  {
-		odb = OObjectDatabasePool.global().acquire(Sprawl.remotedbstring, dbUser, dbPassword);
-		odb.getEntityManager().registerEntityClasses("clocks");		
-	}
-
-	public void open(String db)  {
-		odb = OObjectDatabasePool.global().acquire(db, dbUser, dbPassword);
-		odb.getEntityManager().registerEntityClasses("clocks");
-		
+		if (source == null) {
+			source = new BoneCPDataSource();
+			source.setDriverClass("org.postgresql.Driver");
+			source.setJdbcUrl("jdbc:postgresql://" + host + ":" + port +"/clocks");
+			source.setUser("clocks");
+			source.setPassword("clocks");
+		}
 	}
 
-	public void close(){
-		odb.close();
-	}
+	public String createCampaign() throws SQLException {
 
-	public String createCampaign() {
-
-		Campaign camp = odb.newInstance(Campaign.class);
+		Campaign camp = new Campaign();
 		camp.setName("The Big Board");
 		camp.setId(generateCampaignId());
 		camp.setViewId(generateCampaignId());
-		odb.save(camp);
+		camp.setLastUpdated();
+
+		save(camp);
 
 		return camp.getId();
 	}
 
-	public void updateCampaign(String id, List<Clock> clocks) {
+	public void updateCampaign(String id, List<Clock> clocks) throws SQLException {
 		Campaign camp = getCampaignById(id);
 		camp.setClocks(clocks);
-		odb.save(camp);
+		camp.setLastUpdated();
+		save(camp);
 	}
 
-	public void updateCampaign(String id, String name, List<Clock> clocks) {
+	public void updateCampaign(String id, String name, List<Clock> clocks) throws SQLException {
 		Campaign camp = getCampaignById(id);
 		camp.setName(name);
 		camp.setClocks(clocks);
-		odb.save(camp);
+		camp.setLastUpdated();
+		save(camp);
 	}
 
 	public String generateCampaignId() {
@@ -80,74 +99,104 @@ public class Sprawl {
 
 	public List<Campaign> getCampaigns() {
 		List<Campaign> returnValue = new ArrayList<>();
+		try {
+			returnValue.addAll(
+					new JdbcSession(source).sql("SELECT * FROM campaign").select(new Outcome<List<Campaign>>() {
+						@Override
+						public List<Campaign> handle(ResultSet rset, Statement arg1) throws SQLException {
+							final List<Campaign> ccc = new ArrayList<>();
+							while (rset.next()) {
+								Campaign c = new Campaign();
+								c.setId(rset.getString("id"));
+								c.setViewId(rset.getString("view"));
+								Date ddd = rset.getTimestamp("lastupdated");
+								c.setLastUpdated(ddd);
+								c.setName(rset.getString("name"));
 
-		OObjectIteratorClass<Campaign> c = odb.browseClass(Campaign.class);
-		c.forEach(new Consumer<Campaign>() {
-
-			@Override
-			public void accept(Campaign t) {
-				returnValue.add(t);
-			}
-		});
-
+								Gson g = new Gson();
+								Clock[] clockArray = g.fromJson(rset.getString("clocks"), Clock[].class);
+								c.addClocks(Arrays.asList(clockArray));
+								ccc.add(c);
+							}
+							return ccc;
+						}
+					}));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return returnValue;
 	}
 
 	public Campaign getCampaignById(String id) {
-		List<Campaign> c = odb.query( new OSQLSynchQuery<Campaign>("select * from Campaign where id = '" + id + "'"));
-
-		if (c.isEmpty())
-			return null;
-		else
-			return c.get(0);
+		try {
+			Campaign camp = new JdbcSession(source)
+					.sql("SELECT * FROM campaign WHERE id like ?").set(id)
+					.select(new Outcome<Campaign>() {
+						@Override
+						public Campaign handle(ResultSet rset, Statement arg1) throws SQLException {
+							final Campaign c = new Campaign();
+							while (rset.next()) {
+								c.setId(rset.getString("id"));
+								c.setViewId(rset.getString("view"));
+								Date ddd = rset.getTimestamp("lastupdated");
+								c.setLastUpdated(ddd);
+								c.setName(rset.getString("name"));
+								Gson g = new Gson();
+								Clock[] clockArray = g.fromJson(rset.getString("clocks"), Clock[].class);
+								c.addClocks(Arrays.asList(clockArray));
+							}
+							return c;
+						}
+					});
+			return camp;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public Campaign getCampaignByViewId(String id) {
-		List<Campaign> c = odb.query( new OSQLSynchQuery<Campaign>("select * from Campaign where viewId = '" + id + "'"));
-
-		if (c.isEmpty())
-			return null;
-		else
-			return c.get(0);
+		try {
+			Campaign camp = new JdbcSession(source)
+					.sql("SELECT * FROM campaign WHERE view like ?").set(id)
+					.select(new Outcome<Campaign>() {
+						@Override
+						public Campaign handle(ResultSet rset, Statement arg1) throws SQLException {
+							final Campaign c = new Campaign();
+							while (rset.next()) {
+								c.setId(rset.getString("id"));
+								c.setViewId(rset.getString("view"));
+								Date ddd = rset.getTimestamp("lastupdated");
+								c.setLastUpdated(ddd);
+								c.setName(rset.getString("name"));
+								Gson g = new Gson();
+								Clock[] clockArray = g.fromJson(rset.getString("clocks"), Clock[].class);
+								c.addClocks(Arrays.asList(clockArray));
+							}
+							return c;
+						}
+					});
+			return camp;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-
-	
-	
-//	
-//	com.orientechnologies.orient.core.exception.ODatabaseException: Error on opening database 'remote:localhost/thesprawl'
-//	at com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx.<init>(ODatabaseDocumentTx.java:187)
-//	at com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx.<init>(ODatabaseDocumentTx.java:148)
-//	at com.orientechnologies.orient.object.db.OObjectDatabaseTx.<init>(OObjectDatabaseTx.java:91)
-//	at clocks.SprawlTest.createRemoteDb(SprawlTest.java:46)
-//	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-//	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-//	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-//	at java.lang.reflect.Method.invoke(Unknown Source)
-//	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
-//	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-//	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
-//	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-//	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
-//	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
-//	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
-//	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-//	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-//	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-//	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-//	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-//	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-//	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:86)
-//	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
-//	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
-//	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:678)
-//	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
-//	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
-//Caused by: com.orientechnologies.orient.core.exception.OConfigurationException: Error on opening database: the engine 'remote' was not found. URL was: remote:localhost/thesprawl. Registered engines are: [memory, plocal]
-//	DB name="remote:localhost/thesprawl"
-//	at com.orientechnologies.orient.core.Orient.loadStorage(Orient.java:476)
-//	at com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx.<init>(ODatabaseDocumentTx.java:167)
-//	... 26 more
-//
-//
+	// saves the campaign to the database
+	void save(Campaign c) throws SQLException {
+		String clocksJson = c.getClocksJson();
+		Campaign existing = getCampaignById(c.getId());
+		if (existing != null && !existing.getId().isEmpty()) {
+			new JdbcSession(source).sql("update campaign SET name = ?, clocks = ?, lastupdated = ? where id = ?")
+					.set(c.getName()).set(clocksJson).set(new Utc()).set(c.getId()).update(Outcome.VOID);
+		} else {
+			new JdbcSession(source).sql("INSERT INTO campaign (id, view, name, clocks) VALUES (?, ?, ?, ?)")
+					.set(c.getId()).set(c.getViewId()).set(c.getName()).set(clocksJson)
+					.update(new SingleOutcome<String>(String.class));
+		}
+	}
 }

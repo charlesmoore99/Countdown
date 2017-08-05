@@ -1,8 +1,6 @@
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="javax.websocket.server.ServerEndpointConfig"%>
-<%@page import="org.json.simple.JSONObject"%>
 <%@page import="clocks.Clock"%>
-<%@page import="org.json.simple.JSONArray"%>
 <%@page import="java.net.URI"%>
 <%@page import="clocks.Campaign"%>
 <%@page import="clocks.Sprawl"%>
@@ -12,8 +10,10 @@
 		return;
 	}
 	
-	String db = getServletContext().getInitParameter("dbConnection");
-	Sprawl s = new Sprawl(db);
+	String dbHost = getServletContext().getInitParameter("dbHost");
+	String dbPort = getServletContext().getInitParameter("dbPort");
+	Sprawl s = new Sprawl(dbHost, dbPort);
+
 	Campaign camp = s.getCampaignById(id);
 
 	String ws = getServletContext().getInitParameter("websocketHttpPort");

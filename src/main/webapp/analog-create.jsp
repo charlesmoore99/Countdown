@@ -3,10 +3,10 @@
 	// create the campaign
 
 	
-	String db = getServletContext().getInitParameter("dbConnection");
-	Sprawl s = new Sprawl(db);
-
-	String id = s.createCampaign();
+String dbHost = getServletContext().getInitParameter("dbHost");
+String dbPort = getServletContext().getInitParameter("dbPort");
+Sprawl s = new Sprawl(dbHost, dbPort);
+String id = s.createCampaign();
 %>
 <html>
 <head>

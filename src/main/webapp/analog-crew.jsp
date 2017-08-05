@@ -1,7 +1,5 @@
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
-<%@page import="org.json.simple.JSONObject"%>
 <%@page import="clocks.Clock"%>
-<%@page import="org.json.simple.JSONArray"%>
 <%@page import="java.net.URI"%>
 <%@page import="clocks.Campaign"%>
 <%@page import="clocks.Sprawl"%>
@@ -11,8 +9,9 @@
 		return;
 	}
 
-	String db = getServletContext().getInitParameter("dbConnection");
-	Sprawl s = new Sprawl(db);
+	String dbHost = getServletContext().getInitParameter("dbHost");
+	String dbPort = getServletContext().getInitParameter("dbPort");
+	Sprawl s = new Sprawl(dbHost, dbPort);
 	Campaign camp = s.getCampaignByViewId(id);
 
 	String ws = getServletContext().getInitParameter("websocketHttpPort");
@@ -23,14 +22,6 @@
 	String url = request.getRequestURL().toString();
 	String viewURL = url.substring(0, url.lastIndexOf('/') + 1) + "/crew.jsp?id=" + camp.getViewId();
 	String editURL = request.getRequestURL().toString() + "?" + request.getQueryString();
-
-	JSONArray list = new JSONArray();
-	for (Clock c : camp.getClocks()) {
-		JSONObject obj = new JSONObject();
-		obj.put("name", c.getName());
-		obj.put("level", c.getRating());
-		list.add(obj);
-	}
 
 	String name = StringEscapeUtils.escapeJson(camp.getName());
 	String clockJson = StringEscapeUtils.escapeJson(camp.clocksJson()); 
