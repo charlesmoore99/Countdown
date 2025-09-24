@@ -6,7 +6,7 @@ This is a webapp for keeping track of Countdown clocks in games that are Powered
 
 * Quick summary 
 
-    This is a jsp based webapp that connects to a PostgreSQL RDBMS.  it used to connect ot Orient DB, but Orient prooved too high maintenance on Openshipt n Orient ODBMS.  It uses KnockoutJS and jQuery and WebSockets and Chromecast.
+    This is a jsp based webapp that connects to a PostgreSQL RDBMS.  it used to connect ot Orient DB, but Orient prooved too high maintenance on Openshift.  It uses KnockoutJS and jQuery and WebSockets and Chromecast.
 
 * Version
 
